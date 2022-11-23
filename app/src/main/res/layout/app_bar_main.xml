@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/Theme.AppOpen.AppBarOverlay">
+
         <TextView
             android:id="@+id/connectionTV"
             android:layout_width="match_parent"
@@ -18,26 +19,18 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@color/red"
+            android:background="@color/primary"
             android:visibility="gone"
             tools:visibility="visible"
             android:padding="8dp"
             android:textStyle="bold"
             android:text="@string/oops_no_internet_connection"
             android:layout_gravity="center_horizontal" />
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="enterAlways|scroll"
-            app:popupTheme="@style/Theme.AppOpen.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
         android:id="@+id/mainContentLayout"
         layout="@layout/content_main" />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

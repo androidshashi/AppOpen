@@ -1,64 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/queryInputLayout"
-            android:layout_width="match_parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            app:endIconMode="clear_text"
-            app:helperTextTextColor="@color/red"
-            app:endIconDrawable="@drawable/ic_close"
-            android:layout_marginEnd="@dimen/default_margin">
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
+        android:text="@string/open_links_directly_in_apps"
+        android:textColor="@color/primary_dark"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/keywordEt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="true"
-                android:hint="Enter Url"
-                android:inputType="text" />
+    <EditText
+        android:id="@+id/longUrlET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:autofillHints="true"
+        android:background="@drawable/input_bg"
+        android:hint="@string/paste_url"
+        android:inputType="textUri"
+        android:padding="@dimen/default_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/generateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:alpha="0.5"
+        android:enabled="false"
+        android:text="@string/generate_link"
+        android:textColor="@color/gray_white"
+        android:textSize="12sp"
+        app:iconGravity="textEnd"
+        app:iconSize="14dp"
+        app:layout_constraintEnd_toEndOf="@+id/longUrlET"
+        app:layout_constraintStart_toStartOf="@+id/longUrlET"
+        app:layout_constraintTop_toBottomOf="@+id/longUrlET" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/half_margin"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_height="wrap_content">
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/searchBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                app:iconGravity="textEnd"
-                app:iconSize="14dp"
-                android:textColor="@color/gray_white"
-                android:textSize="12sp"
-                android:layout_marginEnd="@dimen/half_margin"
-                android:alpha="0.5"
-                android:text="@string/creat" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/pasteBtn"
-                android:layout_width="wrap_content"
-                app:iconGravity="textEnd"
-                android:textSize="12sp"
-                android:layout_marginEnd="8dp"
-                app:iconSize="12dp"
-                android:layout_height="wrap_content"
-                android:text="@string/paste" />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/generateBtn" />
 
-        </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

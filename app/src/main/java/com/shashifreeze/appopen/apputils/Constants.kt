@@ -2,12 +2,14 @@ package com.shashifreeze.appopen.apputils
 
 object Constants {
     const val DATABASE_VERSION = 1
-    const val DATABASE_NAME = "KeywordToolDB"
-    const val PREFERENCE_NAME = "KRTPrefs"
+    const val DATABASE_NAME = "AppopenDB"
+    const val PREFERENCE_NAME = "AppopenPrefs"
 
     //EndPoints
     const val GET_APP_DATA = "app-data-4-keyword-tool.php"
     const val GET_KEYWORD_DATA = "search"
+    const val CREATE_SHORT_LINK = "createShort"
+    const val GET_SHORT_LINK_INFO = "shortCodeDetails"
 
     //Admob Ad id
     const val ADMOB_BANNER_LIVE_UNIT_ID = "ca-app-pub-8900857598948191/4108606442"
@@ -24,7 +26,5 @@ object Constants {
 
     const val KEYWORD_TOOL_YT_URL = "https://earningdesire.com/free-youtube-keyword-suggestion-tool/"
     const val KEYWORD_TOOL_GOOGLE_URL = "https://earningdesire.com/google-keyword-suggestion-tool/"
-
-    //https://suggestqueries.google.com/complete/search?ds=&q=query&client=toolbar&hl=hi
 
 }

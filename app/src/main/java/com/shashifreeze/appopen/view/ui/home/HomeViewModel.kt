@@ -16,14 +16,29 @@ class HomeViewModel @Inject constructor(private val repo: HomeRepository) : View
     /**
      * Fetch keyword data
      */
-    private var _keywordResponseLiveData = ConsumableLiveData<NetworkResource<UrlResponse>>(true)
-    val keywordResponseLiveData: LiveData<NetworkResource<UrlResponse>> get() = _keywordResponseLiveData
+    private var _shortCodeInfoLiveData = ConsumableLiveData<NetworkResource<UrlResponse>>(true)
+    val shortCodeInfoLiveData: LiveData<NetworkResource<UrlResponse>> get() = _shortCodeInfoLiveData
 
-    fun getKeywordData(query:String, ds:String) {
-        _keywordResponseLiveData.postValue(NetworkResource.Loading)
+    fun getShortCodeInfo(shortCode:String, type:String) {
+        _shortCodeInfoLiveData.postValue(NetworkResource.Loading)
 
         viewModelScope.launch {
-            _keywordResponseLiveData.postValue(repo.getKeywordData(query, ds = ds))
+            _shortCodeInfoLiveData.postValue(repo.getShortCodeInfo(shortCode,type))
+        }
+    }
+
+
+    /**
+     * create short link
+     */
+    private var _createShortLinkLiveData = ConsumableLiveData<NetworkResource<UrlResponse>>(true)
+    val createShortLinkLiveData: LiveData<NetworkResource<UrlResponse>> get() = _createShortLinkLiveData
+
+    fun createShortLink(longUrl:String) {
+        _createShortLinkLiveData.postValue(NetworkResource.Loading)
+
+        viewModelScope.launch {
+            _createShortLinkLiveData.postValue(repo.createShortLink(longUrl))
         }
     }
 }

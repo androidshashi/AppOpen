@@ -1,39 +1,36 @@
 package com.shashifreeze.appopen.network.api
 
-import com.shashifreeze.appopen.apputils.Constants.GET_KEYWORD_DATA
+import com.shashifreeze.appopen.apputils.Constants.CREATE_SHORT_LINK
+import com.shashifreeze.appopen.apputils.Constants.GET_SHORT_LINK_INFO
 import com.shashifreeze.appopen.network.response.UrlResponse
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 /**
  * Interface for Home page calls
  */
 interface UrlDataApi {
-     companion object{
-
-         //clients
-         const val CLIENT_YT = "youtube"
-         const val CLIENT_CHROME = "chrome"
-
-         //data sources
-         const val DS_YT = "yt"
-         const val DS_GOOGLE = ""
-     }
     /**
-     * @param: qrcode
-     * @return: QRScanResponse
+     * @param:
+     * @return:
      * @author: Shashi
-     * Get keyword data
+     * Get URL data
      */
-    @GET(GET_KEYWORD_DATA)
-    suspend fun getKeywordData(
-        @Query("hl") hl: String="en",//language
-        @Query("client") client: String=CLIENT_YT,//client can be changed to any browser
-        @Query("hjson") hjson: String = "t",
-        @Query("cp") cp: Int=1,
-        @Query("q") q: String,//query
-        @Query("alt") alt: String="json",//alternate
-        @Query("ds") dataSource: String=DS_GOOGLE,//alternate
+    companion object{
+        const val URL_TYPE_WEB = "web"
+        const val URL_TYPE_YT = "yt"
+        const val URL_TYPE_IG = "ig"
+    }
+    @GET(GET_SHORT_LINK_INFO)
+    suspend fun getShortCodeInfo(
+        @Query("short_code") shortCode:String,//short code
+        @Query("type") type: String,//url type web/yt/ig
+    ): UrlResponse
+
+    @POST(CREATE_SHORT_LINK)
+    suspend fun createShortLink(
+        @Query("long_url") longUrl:String,//short code
     ): UrlResponse
 
 }

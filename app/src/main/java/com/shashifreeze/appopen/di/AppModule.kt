@@ -1,6 +1,7 @@
 package com.shashifreeze.appopen.di
 
 import com.shashifreeze.appopen.network.RemoteDataSource
+import com.shashifreeze.appopen.network.api.AppDataApi
 import com.shashifreeze.appopen.network.api.UrlDataApi
 import com.shashifreeze.appopen.view.ui.home.HomeRepository
 import com.shashifreeze.appopen.view.ui.main.MainRepository
@@ -35,7 +36,7 @@ object AppModule {
      */
     @Provides
     @Singleton
-    fun provideMainRepository(): MainRepository = MainRepository()
+    fun provideMainRepository(api: AppDataApi): MainRepository = MainRepository(api)
 
     /**
      * @param: NA

@@ -10,6 +10,8 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -116,19 +118,6 @@ fun Context.notificationPermissionEnabled(): Boolean {
     }
     return false
 }
-
-fun Context.openNotificationPermissionSettings() {
-    try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-        } else {
-            startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
-        }
-    } catch (e: ActivityNotFoundException) {
-        showToast("Your Device Does Not Support this service.")
-    }
-}
-
 
 fun Context.getCurrentTime(format: String = "dd.MM.yyyy. HH:mm a"): String {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -282,3 +271,45 @@ fun Context.shareFiles(list: ArrayList<File>) {
 
     }
 }
+
+
+/**
+ * launch Custom chrome tab
+ */
+
+fun Context.openCustomChromeTab(url:String)
+{
+
+    // initializing object for custom chrome tabs.
+    // initializing object for custom chrome tabs.
+    val customIntent = CustomTabsIntent.Builder()
+
+    // below line is setting toolbar color
+    // for our custom chrome tab.
+    customIntent.setToolbarColor(ContextCompat.getColor(this, R.color.primary))
+    val customTabsIntent = customIntent.build()
+    // package name is the default package
+    // for our custom chrome tab
+    // package name is the default package
+    // for our custom chrome tab
+    val packageName = "com.android.chrome"
+    try{
+        // we are checking if the package name is not null
+        // if package name is not null then we are calling
+        // that custom chrome tab with intent by passing its
+        // package name.
+        customTabsIntent.intent.setPackage(packageName)
+
+        // in that custom tab intent we are passing
+        // our url which we have to browse.
+        customTabsIntent.launchUrl( this, Uri.parse(url))
+    } catch (e:java.lang.Exception) {
+        // if the custom tabs fails to load then we are simply
+        // redirecting our user to users device default browser.
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    }
+}
+
+
+
+

@@ -13,7 +13,7 @@ import android.widget.EditText
 
 /**
  *
- * If validation passes (edittext is not empty) then returns true else false
+ * If validation passes (edittext is not empty) then returns false else true
  */
 fun EditText.validateEmpty(fieldName: String): Boolean {
     return if (this.text.isEmpty()) {
@@ -68,6 +68,11 @@ fun EditText.clear() {
     this.setText("")
 }
 
+/**
+ * get Url type
+ */
+fun EditText.getUrlType() = this.text.split("/")[3]
+
 fun EditText.compare(newPasswordET: EditText,fieldName1:String,fieldName2:String): Boolean {
     return if (this.text.toString() != newPasswordET.text.toString()) { // validation failed
         this.requestFocus()
@@ -75,8 +80,6 @@ fun EditText.compare(newPasswordET: EditText,fieldName1:String,fieldName2:String
         true
     } else false
 }
-
-
 
 fun EditText.pasteCopiedText()
 {

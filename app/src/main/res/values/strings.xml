@@ -31,4 +31,10 @@
     <string name="nav_open">open</string>
     <string name="nav_close">close</string>
     <string name="creat">Create</string>
+    <string name="open_links_directly_in_apps">Open Links Directly In Apps</string>
+    <string name="generate_link">Generate Link</string>
+    <string name="paste_url">Paste Url</string>
+    <string name="short_url">Short Url</string>
+    <string name="long_url">Long Url</string>
+    <string name="delete_all">Delete All</string>
 </resources>

@@ -7,7 +7,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -27,12 +29,10 @@ import com.shashifreeze.appopen.apputils.Constants.KEYWORD_TOOL_GOOGLE_URL
 import com.shashifreeze.appopen.apputils.Constants.KEYWORD_TOOL_YT_URL
 import com.shashifreeze.appopen.apputils.Constants.PRIVACY_POLICY_URL
 import com.shashifreeze.appopen.apputils.Constants.TNC_URL
-import com.shashifreeze.appopen.apputils.extensions.initAndAddTestDevices
-import com.shashifreeze.appopen.apputils.extensions.shareApp
-import com.shashifreeze.appopen.apputils.extensions.showAlertDialog
-import com.shashifreeze.appopen.apputils.extensions.startNewActivity
+import com.shashifreeze.appopen.apputils.extensions.*
 import com.shashifreeze.appopen.apputils.internet.ConnectionLiveData
 import com.shashifreeze.appopen.databinding.ActivityMainBinding
+import com.shashifreeze.appopen.network.NetworkResource
 import com.shashifreeze.appopen.view.ui.contact.AboutActivity
 import com.shashifreeze.appopen.view.ui.contact.ContactActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-
+    private val viewModel by viewModels<MainViewModel>()
     private var mAdView: AdView? = null
     private var productImageView: ImageView? = null
     private var productTitle: TextView? = null
@@ -67,14 +67,61 @@ class MainActivity : AppCompatActivity() {
         //init banner ad
         showBannerAd()
 
-        //action bar
-        setSupportActionBar(binding.appBarMain.toolbar)
-
         //setup navigation drawer
         setUpNavigationView()
 
         //stop progress bar
         connectionLiveData = ConnectionLiveData(this)
+
+        //getAppData
+        viewModel.getAppData(applicationContext.packageName)
+
+        listeners()
+
+        observe()
+    }
+
+    private fun observe() {
+        connectionLiveData?.observe(this) {
+            binding.appBarMain.connectionTV.visible(!it)
+        }
+    }
+
+    private fun listeners() {
+        binding.appBarMain.mainContentLayout.menuIV.setOnClickListener {
+            handleDrawer()
+        }
+
+        binding.appBarMain.mainContentLayout.historyIV.setOnClickListener {
+            navController.navigate(R.id.nav_fragment_history)
+        }
+
+        binding.appBarMain.mainContentLayout.logoIV.setOnClickListener {
+            navController.navigate(R.id.nav_fragment_home)
+        }
+
+        viewModel.appDataLiveData.observe(this) { it1 ->
+
+            if (it1 is NetworkResource.Success) {
+                if (it1.value.appError == null) {
+                    productImageView?.loadImage(it1.value.appData.appIconUrl)
+                    productTitle?.text = it1.value.appData.appTitle
+                    headerView?.setOnClickListener {
+                        openAppOnPlayStore(it1.value.appData.appPackageName)
+                    }
+                } else {
+                    productTitle?.text = getString(R.string.app_name)
+                    productImageView?.setImageResource(R.drawable.logo)
+                    installNow?.visible(false)
+                    headerView?.setOnClickListener(null)
+                }
+            } else if (it1 is NetworkResource.Failure) {
+                productImageView?.setImageResource(R.drawable.logo)
+                productTitle?.text = getString(R.string.app_name)
+                installNow?.visible(false)
+                headerView?.setOnClickListener(null)
+            }
+        }
     }
 
     private fun showBannerAd() {
@@ -120,9 +167,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         // to make the Navigation drawer icon always appear on the action bar
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         //inflating the header view
@@ -219,5 +266,13 @@ class MainActivity : AppCompatActivity() {
             message = "Thanks for using\uD83D\uDE0A",
             callback = { finish() }
         )
+    }
+
+    fun handleDrawer() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
     }
 }

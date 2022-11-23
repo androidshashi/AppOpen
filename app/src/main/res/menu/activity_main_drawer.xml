@@ -2,21 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <item android:title="@string/app_name">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_fragment_home"
-                    android:title="@string/home" />
-                <item
-                    android:id="@+id/nav_fragment_history"
-                    android:title="@string/history" />
-                <item
-                    android:id="@+id/nav_fragment_settings"
-                    android:title="@string/action_settings" />
-            </group>
-        </menu>
-    </item>
+
+    <item
+        android:id="@+id/nav_fragment_home"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/nav_fragment_history"
+        android:title="@string/history" />
 
     <item android:title="@string/online_tools">
         <menu>
@@ -31,19 +23,13 @@
         </menu>
     </item>
 
-    <item android:title="@string/more_apps">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_more_apps"
-                    android:title="@string/more_apps" />
-            </group>
-        </menu>
-    </item>
-
     <item android:title="@string/help_feedback">
         <menu>
             <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/nav_more_apps"
+                    android:title="@string/more_apps" />
 
                 <item
                     android:id="@+id/nav_your_feedback"

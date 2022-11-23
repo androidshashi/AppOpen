@@ -13,11 +13,16 @@ import javax.inject.Singleton
  *@description = This class handles
  */
 @Singleton
-class HomeRepository @Inject constructor(private val keywordDataApi: UrlDataApi) : BaseRepository() {
+class HomeRepository @Inject constructor(private val api: UrlDataApi) : BaseRepository() {
 
-    suspend fun getKeywordData(query:String, ds:String)  = withContext(Dispatchers.IO)
+    suspend fun getShortCodeInfo(shortCode:String, type:String)  = withContext(Dispatchers.IO)
     {
-        safeApiCall { keywordDataApi.getKeywordData(q = query, dataSource = ds) }
+        safeApiCall { api.getShortCodeInfo(shortCode, type) }
+    }
+
+    suspend fun createShortLink(longUrl:String)  = withContext(Dispatchers.IO)
+    {
+        safeApiCall { api.createShortLink(longUrl) }
     }
 
 }

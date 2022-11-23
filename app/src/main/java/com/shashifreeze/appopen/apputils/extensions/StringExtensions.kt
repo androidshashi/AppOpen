@@ -1,5 +1,9 @@
 package com.vendeor.util.extensions
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import com.shashifreeze.appopen.apputils.extensions.showToast
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -11,17 +15,13 @@ import java.util.regex.Pattern
 
 
 /**
- *
- * Extract OTP from string and populate it in this edittext
+ * Copy string to clipboard
  */
-fun String.extractOTPFromMessageString(): Int? {
-    val otpPattern: Pattern = Pattern.compile("(|^)\\d{6}")
-    val matcher: Matcher = otpPattern.matcher(this)
-    if (matcher.find()) {
-        return matcher.group(0)?.toIntOrNull()
-    }
-
-    return null
+fun String.copyToClipboard(context: Context) {
+    val clipBoard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("KRT", this)
+    clipBoard.setPrimaryClip(clip)
+    context.showToast("Copied Successfully!")
 }
 
 

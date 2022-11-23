@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class UrlData(
     @SerializedName("errorMessage")
-    val errorMessage: Any,
+    val errorMessage: String?,
     @SerializedName("hits")
     val hits: Int,
     @SerializedName("longUrl")
@@ -13,7 +13,7 @@ data class UrlData(
     @SerializedName("shortCode")
     val shortCode: String,
     @SerializedName("siteKey")
-    val siteKey: Any,
+    val siteKey: String?,
     @SerializedName("totalLinks")
     val totalLinks: Int,
     @SerializedName("type")

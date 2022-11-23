@@ -11,8 +11,8 @@ import javax.inject.Singleton
 class RemoteDataSource {
 
     companion object {
-        private val BASE_URL = "https://nextnearby.com/api/"
-        private val MAP_BASE_URL = "https://maps.googleapis.com/maps/api/"
+        private const val BASE_URL = "https://appopen.me/api/"
+        const val APP_DATA_BASE_URL = "https://earningdesire.com/apps-api/"
     }
 
     /**@param :  (api:Class<Api>,authToken:String? =null)
@@ -20,9 +20,9 @@ class RemoteDataSource {
      * @return : Api
      * Build Api instance using retrofit  */
     @Singleton
-    fun <Api> buildApi(api: Class<Api>, authToken: String? = null): Api {
+    fun <Api> buildApi(api: Class<Api>, authToken: String? = null,baseUrl:String=BASE_URL): Api {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .client(getOkHttpClient(authToken))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -51,17 +51,4 @@ class RemoteDataSource {
                 }
             }.build()
 
-    /**@param :  (api:Class<Api>)
-     * @author: Shashi
-     * @return : Api
-     * Build Google map Api instance using retrofit  */
-    @Singleton
-    fun <Api> buildMapApi(api: Class<Api>): Api {
-        return Retrofit.Builder()
-            .baseUrl(MAP_BASE_URL)
-            .client(getOkHttpClient())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(api)
-    }
 }

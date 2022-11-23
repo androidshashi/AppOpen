@@ -1,8 +1,17 @@
 package com.shashifreeze.appopen.view.ui.home
 
+import android.app.Dialog
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.webkit.URLUtil
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,10 +27,14 @@ import com.shashifreeze.appopen.apputils.extensions.*
 import com.shashifreeze.appopen.apputils.getInterstitialAdUnitID
 import com.shashifreeze.appopen.databinding.FragmentHomeBinding
 import com.shashifreeze.appopen.network.NetworkResource
+import com.shashifreeze.appopen.network.response.UrlResponse
 import com.shashifreeze.appopen.preference.MyPreferences
+import com.shashifreeze.appopen.view.ui.history.HistoryViewModel
+import com.vendeor.util.extensions.copyToClipboard
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 /**
  * A simple [Fragment] subclass.
@@ -36,6 +49,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<HomeViewModel>()
+    private var solveCaptchaDialog: Dialog? = null
+    private val historyViewModel by viewModels<HistoryViewModel>()
 
     companion object {
         const val TAG = "ResearchFragment"
@@ -98,6 +113,61 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             })
     }
 
+    private fun solveCaptchaDialog(longUrl:String) {
+        solveCaptchaDialog = Dialog(requireContext())
+        solveCaptchaDialog?.let { dialog ->
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(false)
+            dialog.setContentView(R.layout.solve_captcha_dialog)
+            val tv1 = dialog.findViewById(R.id.input1ET) as TextView
+            val tv2 = dialog.findViewById(R.id.shortUrlTV) as TextView
+            val resultET = dialog.findViewById(R.id.resultET) as EditText
+            //generate two random number and set to tv1 and tv2
+            val num1 = Random(SystemClock.uptimeMillis()).nextInt(20)
+            val num2 = Random(SystemClock.uptimeMillis()).nextInt(10)
+            val correctResult = num1 + num2
+            tv1.text = num1.toString()
+            tv2.text = num2.toString()
+
+            val closeIV = dialog.findViewById(R.id.closeIV) as ImageView
+            val submitBtn = dialog.findViewById(R.id.submitBtn) as AppCompatButton
+            submitBtn.setOnClickListener {
+                if (!resultET.validateEmpty("") && correctResult.toString() == resultET.text.toString()) {
+                    //validation passed proceed for link creation
+                    requireActivity().hideKeyboard()
+                    viewModel.createShortLink(longUrl)
+                } else {
+                    resultET.requestFocus()
+                    resultET.error = "Please solve this"
+                }
+            }
+            closeIV.setOnClickListener { dialog.dismiss() }
+            dialog.show()
+        }
+
+    }
+
+    private fun urlCreatedDialog(shortUrl:String) {
+
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.url_created_dialog)
+        val tv1 = dialog.findViewById(R.id.shortUrlTV) as TextView
+        tv1.text = shortUrl
+        val closeIV = dialog.findViewById(R.id.closeIV) as ImageView
+        val copyBtn = dialog.findViewById(R.id.copyBtn) as AppCompatButton
+        val shareBtn = dialog.findViewById(R.id.shareBtn) as AppCompatButton
+        copyBtn.setOnClickListener {
+            shortUrl.copyToClipboard(requireContext())
+        }
+        shareBtn.setOnClickListener {
+            requireContext().shareText(shortUrl)
+        }
+        closeIV.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+
     /**
      * Checks whether ad is seen today or not, if not then show
      */
@@ -108,9 +178,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (requireContext().getCurrentTime("dd-MM-yyyy") != lastAdSeenDate) {
                 //init and load interstitial
                 loadInterstitialAd()
-            } else {
-                //fire in app review dialog
-
             }
         }
     }
@@ -120,30 +187,69 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun observe() {
-        viewModel.keywordResponseLiveData.observe(viewLifecycleOwner) {
+        viewModel.shortCodeInfoLiveData.observe(viewLifecycleOwner) {
+
+
 
             if (it is NetworkResource.Success<*>) {
                 //@todo handle response
+
             } else if (it is NetworkResource.Failure) {
                 Log.d(TAG, "${it.isNetworkError}, ${it.errorBody}, ${it.message}")
-                //hide options
-                binding.queryInputLayout.helperText = "Something went wrong!"
+                requireContext().showInfoDialog(title = "Error", "Something went wrong!")
+            }
+        }
+
+        viewModel.createShortLinkLiveData.observe(viewLifecycleOwner) {
+            if (it is NetworkResource.Loading)
+            {
+                //close captcha dialog
+                solveCaptchaDialog?.dismiss()
+                binding.progressBar.visible(true)
+            }else{
+                binding.progressBar.visible(false)
+            }
+
+            if (it is NetworkResource.Success<*>) {
+                //@todo handle response
+                val urlData = (it.value as UrlResponse).urlData
+                if (urlData.errorMessage!=null)
+                {
+                    requireContext().showInfoDialog(title = "Error", urlData.errorMessage)
+                }else{
+                    val shortLink = "https://appopen.me/${urlData.type}/${urlData.shortCode}"
+                    //show short link dialog
+                    urlCreatedDialog(shortLink)
+                    //Add url to local history
+                    lifecycleScope.launch {
+                        historyViewModel.saveHistory(longUrl = binding.longUrlET.text.toString(), shortUrl = shortLink)
+                    }
+                }
+
+            } else if (it is NetworkResource.Failure) {
+                Log.d(TAG, "${it.isNetworkError}, ${it.errorBody}, ${it.message}")
+                requireContext().showInfoDialog(title = "Error", "Something went wrong!")
             }
         }
     }
 
-
     private fun listener() {
 
-        binding.searchBtn.setOnClickListener {
+        binding.generateBtn.setOnClickListener {
             requireActivity().hideKeyboard()
-            viewModel.getKeywordData(binding.keywordEt.text.trim().toString(), "ds")
+            val longUrl = binding.longUrlET.text.trim().toString()
+            if (URLUtil.isHttpsUrl(longUrl)) {
+                solveCaptchaDialog(longUrl)
+            } else {
+                binding.longUrlET.requestFocus()
+                binding.longUrlET.error = "Not a valid Url"
+            }
         }
 
-        binding.keywordEt.addTextChangedListener(object : TextChangeWatcher() {
+        binding.longUrlET.addTextChangedListener(object : TextChangeWatcher() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //enable the button if any text is entered
-                binding.searchBtn.enable(
+                binding.generateBtn.enable(
                     s != null
                             && s.isNotEmpty()
                             && s.isNotBlank()
@@ -151,9 +257,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         })
 
-        binding.pasteBtn.setOnClickListener {
-            binding.keywordEt.pasteCopiedText()
-        }
     }
 
     override fun onDestroyView() {

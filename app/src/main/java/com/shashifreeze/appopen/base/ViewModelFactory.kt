@@ -2,6 +2,8 @@ package com.shashifreeze.appopen.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.shashifreeze.appopen.view.ui.history.HistoryRepository
+import com.shashifreeze.appopen.view.ui.history.HistoryViewModel
 import com.shashifreeze.appopen.view.ui.home.HomeRepository
 import com.shashifreeze.appopen.view.ui.home.HomeViewModel
 import com.shashifreeze.appopen.view.ui.main.MainRepository
@@ -24,6 +26,10 @@ class ViewModelFactory(private val repo1: BaseRepository, private val repo2: Bas
 
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
                 HomeViewModel(repo1 as HomeRepository) as T
+            }
+
+            modelClass.isAssignableFrom(HistoryViewModel::class.java) -> {
+                HistoryViewModel(repo1 as HistoryRepository) as T
             }
 
             else -> throw IllegalArgumentException("View model not found")
