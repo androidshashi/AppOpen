@@ -14,6 +14,9 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
+                    android:id="@+id/nav_appopen"
+                    android:title="@string/launch_appopen_me" />
+                <item
                     android:id="@+id/nav_keyword_tool_google"
                     android:title="@string/keyword_tool_google" />
                 <item

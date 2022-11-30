@@ -3,6 +3,7 @@ package com.shashifreeze.appopen.apputils.extensions
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Patterns
+import android.webkit.URLUtil
 import android.widget.EditText
 
 /**
@@ -71,9 +72,27 @@ fun EditText.clear() {
 /**
  * get Url type
  */
-fun EditText.getUrlType() = this.text.split("/")[3]
+fun EditText.getUrlType():String? {
+    val v = this.text.trim().split("/")
+    return if (v.size >= 3) {
+        return v[3]
 
-fun EditText.compare(newPasswordET: EditText,fieldName1:String,fieldName2:String): Boolean {
+    } else null
+}
+
+/**
+ * get short code
+ */
+fun EditText.getShortCode(): String? {
+
+    val v = this.text.trim().split("/")
+    return if (v.size >= 4) {
+        return v[4]
+
+    } else null
+}
+
+fun EditText.compare(newPasswordET: EditText, fieldName1: String, fieldName2: String): Boolean {
     return if (this.text.toString() != newPasswordET.text.toString()) { // validation failed
         this.requestFocus()
         this.error = "$fieldName1 must be same as $fieldName2"
@@ -81,8 +100,7 @@ fun EditText.compare(newPasswordET: EditText,fieldName1:String,fieldName2:String
     } else false
 }
 
-fun EditText.pasteCopiedText()
-{
+fun EditText.pasteCopiedText() {
     clear()
     val clipBoard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clipData = clipBoard.primaryClip
@@ -90,5 +108,19 @@ fun EditText.pasteCopiedText()
     val copiedText = item?.text.toString()
     this.setText(copiedText)
     clearFocus()
+}
 
+fun EditText.pasteCopiedUrl() {
+    clear()
+    val clipBoard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clipData = clipBoard.primaryClip
+    val item = clipData?.getItemAt(0)
+    val copiedUrl = item?.text.toString()
+    if (URLUtil.isHttpsUrl(copiedUrl)) {
+        this.setText(copiedUrl)
+        clearFocus()
+    } else {
+        requestFocus()
+        this.error = "Unable to find a URL to paste"
+    }
 }

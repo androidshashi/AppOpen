@@ -19,14 +19,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:layout_width="48dp"
         android:id="@+id/logoIV"
-        android:layout_height="48dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
         android:src="@drawable/logo"
-        app:layout_constraintBottom_toTopOf="@+id/nav_host_fragment"
-        app:layout_constraintEnd_toStartOf="@+id/historyIV"
+        app:layout_constraintBottom_toBottomOf="@+id/menuIV"
         app:layout_constraintStart_toEndOf="@+id/menuIV"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/menuIV" />
 
     <ImageView
         android:id="@+id/historyIV"
@@ -62,5 +62,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/searchIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/historyIV"
+        app:layout_constraintEnd_toStartOf="@+id/historyIV"
+        app:layout_constraintTop_toTopOf="@+id/historyIV"
+        android:src="@drawable/ic_search"
+        android:contentDescription="search icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

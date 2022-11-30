@@ -7,12 +7,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shashifreeze.appopen.R
-import com.shashifreeze.appopen.apputils.addDivider
 import com.shashifreeze.appopen.apputils.extensions.showToast
 import com.shashifreeze.appopen.apputils.extensions.visible
 import com.shashifreeze.appopen.database.entity.HistoryData
 import com.shashifreeze.appopen.databinding.FragmentHistoryBinding
-import com.vendeor.util.extensions.copyToClipboard
+import com.shashifreeze.appopen.apputils.extensions.copyToClipboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

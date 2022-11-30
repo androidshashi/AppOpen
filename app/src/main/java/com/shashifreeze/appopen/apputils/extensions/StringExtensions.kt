@@ -1,4 +1,4 @@
-package com.vendeor.util.extensions
+package com.shashifreeze.appopen.apputils.extensions
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -23,6 +23,8 @@ fun String.copyToClipboard(context: Context) {
     clipBoard.setPrimaryClip(clip)
     context.showToast("Copied Successfully!")
 }
+
+
 
 
 

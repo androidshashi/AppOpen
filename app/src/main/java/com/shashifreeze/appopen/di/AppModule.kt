@@ -5,6 +5,7 @@ import com.shashifreeze.appopen.network.api.AppDataApi
 import com.shashifreeze.appopen.network.api.UrlDataApi
 import com.shashifreeze.appopen.view.ui.home.HomeRepository
 import com.shashifreeze.appopen.view.ui.main.MainRepository
+import com.shashifreeze.appopen.view.ui.search.SearchRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,12 +41,21 @@ object AppModule {
 
     /**
      * @param: NA
-     * @return: ResearchRepository
+     * @return: HomeRepository
      * @author: Shashi
-     * Creates and provides ResearchRepository object reference */
+     * Creates and provides HomeRepository object reference */
     @Provides
     @Singleton
     fun provideHomeRepository(api: UrlDataApi): HomeRepository = HomeRepository(api)
+
+    /**
+     * @param: NA
+     * @return: HomeRepository
+     * @author: Shashi
+     * Creates and provides SearchRepository object reference */
+    @Provides
+    @Singleton
+    fun provideSearchRepository(api: UrlDataApi): SearchRepository = SearchRepository(api)
 
 
 }

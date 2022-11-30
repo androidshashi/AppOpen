@@ -14,21 +14,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(private val repo: HomeRepository) : ViewModel() {
 
     /**
-     * Fetch keyword data
-     */
-    private var _shortCodeInfoLiveData = ConsumableLiveData<NetworkResource<UrlResponse>>(true)
-    val shortCodeInfoLiveData: LiveData<NetworkResource<UrlResponse>> get() = _shortCodeInfoLiveData
-
-    fun getShortCodeInfo(shortCode:String, type:String) {
-        _shortCodeInfoLiveData.postValue(NetworkResource.Loading)
-
-        viewModelScope.launch {
-            _shortCodeInfoLiveData.postValue(repo.getShortCodeInfo(shortCode,type))
-        }
-    }
-
-
-    /**
      * create short link
      */
     private var _createShortLinkLiveData = ConsumableLiveData<NetworkResource<UrlResponse>>(true)

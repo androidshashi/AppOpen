@@ -150,7 +150,7 @@ fun Context.shareText(text: String) {
 
 fun Context.shareApp() {
     val text =
-        "100% Free Keyword Research Tool:\nGet Most searched keywords on Google Related to your keyword. Our web version tool is: https://earningdesire.com/google-keyword-suggestion-tool/ \nDownload the app\nhttps://play.google.com/store/apps/details?id=$packageName"
+        "Open any link directly in android app. Helps to boots subscribers & followers.\n visit: https://apppopen.me OR download the app\nhttps://play.google.com/store/apps/details?id=$packageName"
     val intent: Intent = Intent().apply {
         action = Intent.ACTION_SEND
         putExtra(Intent.EXTRA_TEXT, text)

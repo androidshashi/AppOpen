@@ -12,8 +12,9 @@ object Constants {
     const val GET_SHORT_LINK_INFO = "shortCodeDetails"
 
     //Admob Ad id
-    const val ADMOB_BANNER_LIVE_UNIT_ID = "ca-app-pub-8900857598948191/4108606442"
-    const val ADMOB_INTERSTITIAL_LIVE_UNIT_ID = "ca-app-pub-8900857598948191/7856279765"
+    const val ADMOB_BANNER_LIVE_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
+    const val ADMOB_INTERSTITIAL_LIVE_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
+    //Test ids
     const val ADMOB_BANNER_TEST_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
     const val ADMOB_INTERSTITIAL_TEST_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
 
@@ -21,10 +22,11 @@ object Constants {
     const val DEV_PAGE_ID = "6373796553904943833"
     const val DEVELOPER_ID = "ShashApps"
 
-    const val PRIVACY_POLICY_URL = "https://sites.google.com/view/keyword-research-tool-app"
-    const val TNC_URL = "https://sites.google.com/view/keyword-research-tool-app/terms-and-conditions"
+    const val PRIVACY_POLICY_URL = "https://sites.google.com/view/appopen-me/"
+    const val TNC_URL = "https://sites.google.com/view/appopen-me/tnc"
 
     const val KEYWORD_TOOL_YT_URL = "https://earningdesire.com/free-youtube-keyword-suggestion-tool/"
     const val KEYWORD_TOOL_GOOGLE_URL = "https://earningdesire.com/google-keyword-suggestion-tool/"
+    const val APP_OPEN_URL = "https://appopen.me"
 
 }

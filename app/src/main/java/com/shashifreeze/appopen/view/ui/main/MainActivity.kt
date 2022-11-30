@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -24,7 +25,9 @@ import com.google.android.gms.ads.AdView
 import com.google.android.material.navigation.NavigationView
 import com.shashifreeze.appopen.R
 import com.shashifreeze.appopen.apputils.*
+import com.shashifreeze.appopen.apputils.Constants.APP_OPEN_URL
 import com.shashifreeze.appopen.apputils.Constants.DEVELOPER_ID
+import com.shashifreeze.appopen.apputils.Constants.DEV_PAGE_ID
 import com.shashifreeze.appopen.apputils.Constants.KEYWORD_TOOL_GOOGLE_URL
 import com.shashifreeze.appopen.apputils.Constants.KEYWORD_TOOL_YT_URL
 import com.shashifreeze.appopen.apputils.Constants.PRIVACY_POLICY_URL
@@ -64,8 +67,9 @@ class MainActivity : AppCompatActivity() {
         //init ad sdk
         initAndAddTestDevices()
 
+        //@todo enable it after 5000 downloads
         //init banner ad
-        showBannerAd()
+        //showBannerAd()
 
         //setup navigation drawer
         setUpNavigationView()
@@ -82,6 +86,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observe() {
+        viewModel.appDataLiveData.observe(this) { it1 ->
+
+            if (it1 is NetworkResource.Success) {
+                if (it1.value.appError == null) {
+                    productImageView?.loadImage(it1.value.appData.appIconUrl)
+                    productTitle?.text = it1.value.appData.appTitle
+                    headerView?.setOnClickListener {
+                        openAppOnPlayStore(it1.value.appData.appPackageName)
+                    }
+                } else {
+                    productTitle?.text = getString(R.string.app_name)
+                    installNow?.visible(false)
+                    headerView?.setOnClickListener(null)
+                }
+            } else if (it1 is NetworkResource.Failure) {
+
+                productTitle?.text = getString(R.string.app_name)
+                installNow?.visible(false)
+                headerView?.setOnClickListener(null)
+            }
+        }
         connectionLiveData?.observe(this) {
             binding.appBarMain.connectionTV.visible(!it)
         }
@@ -94,6 +119,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.appBarMain.mainContentLayout.historyIV.setOnClickListener {
             navController.navigate(R.id.nav_fragment_history)
+        }
+
+        binding.appBarMain.mainContentLayout.searchIcon.setOnClickListener {
+            navController.navigate(R.id.nav_fragment_search)
         }
 
         binding.appBarMain.mainContentLayout.logoIV.setOnClickListener {
@@ -162,7 +191,7 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.nav_fragment_home,
                 R.id.nav_fragment_history,
-                R.id.nav_fragment_settings,
+                R.id.nav_fragment_search
             ), drawerLayout
         )
 
@@ -191,11 +220,15 @@ class MainActivity : AppCompatActivity() {
                     openAppOnPlayStore()
                 }
                 R.id.nav_more_apps -> {
-                    moreApps(DEVELOPER_ID)
+                    moreApps(devPageId = DEV_PAGE_ID)
                 }
 
                 R.id.nav_privacy_policy -> {
                     openSite(PRIVACY_POLICY_URL)
+                }
+
+                R.id.nav_appopen -> {
+                    openSite(APP_OPEN_URL)
                 }
 
                 R.id.nav_tnc -> {
@@ -261,14 +294,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
-        showAlertDialog(
-            title = "Want to exit?",
-            message = "Thanks for using\uD83D\uDE0A",
-            callback = { finish() }
-        )
+        val id = navController.currentDestination?.id
+        if (id == R.id.nav_fragment_history || id == R.id.nav_fragment_search)
+        {
+            navController.popBackStack()
+        }else{
+            showAlertDialog(
+                title = "Want to exit?",
+                message = "Thanks for using\uD83D\uDE0A",
+                callback = { finish() }
+            )
+        }
+
     }
 
-    fun handleDrawer() {
+    private fun handleDrawer() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {

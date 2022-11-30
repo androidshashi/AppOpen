@@ -21,6 +21,8 @@ import com.shashifreeze.appopen.apputils.Constants.ADMOB_BANNER_TEST_UNIT_ID
 import com.shashifreeze.appopen.apputils.Constants.ADMOB_INTERSTITIAL_LIVE_UNIT_ID
 import com.shashifreeze.appopen.apputils.Constants.ADMOB_INTERSTITIAL_TEST_UNIT_ID
 import com.shashifreeze.appopen.apputils.extensions.showToast
+import com.shashifreeze.appopen.network.api.UrlDataApi
+import com.shashifreeze.appopen.network.response.UrlData
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -133,7 +135,18 @@ fun AdView.setBannerAdUnitID()
 fun getInterstitialAdUnitID():String = if (BuildConfig.DEBUG) ADMOB_INTERSTITIAL_TEST_UNIT_ID else ADMOB_INTERSTITIAL_LIVE_UNIT_ID
 
 
-
+fun UrlData.getUrlTypeInfo():String
+{
+    return when (this.type) {
+        UrlDataApi.URL_TYPE_YT -> {
+            "YouTube"
+        }
+        UrlDataApi.URL_TYPE_IG -> {
+            "Instagram"
+        }
+        else -> UrlDataApi.URL_TYPE_WEB
+    }
+}
 
 
 

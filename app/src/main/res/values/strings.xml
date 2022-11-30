@@ -37,4 +37,17 @@
     <string name="short_url">Short Url</string>
     <string name="long_url">Long Url</string>
     <string name="delete_all">Delete All</string>
+    <string name="your_name">Your Name</string>
+    <string name="message">Message</string>
+    <string name="send_message">Send Message</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="we_will_reply_to_your_message_within_8_working_hours_so_have_patience_thanks_for_using_our_app">We will reply to your message within 8 working hours. So have patience. Thanks for using our app.</string>
+    <string name="contact_email">skprogrammingdesire@gmail.com</string>
+    <string name="launch_appopen_me">Launch Appopen.me</string>
+    <string name="you_can_user_appopen_me_website">You can user appopen.me website</string>
+    <string name="paste_short_url">Paste short Url</string>
+    <string name="get_short_link_info">Get short link info</string>
+    <string name="not_a_valid_url">Not a valid appopen.me URL</string>
+    <string name="link_info">Link Info</string>
+
 </resources>

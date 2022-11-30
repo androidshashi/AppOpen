@@ -39,32 +39,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/generateBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:alpha="0.5"
-        android:enabled="false"
-        android:text="@string/generate_link"
-        android:textColor="@color/gray_white"
-        android:textSize="12sp"
-        app:iconGravity="textEnd"
-        app:iconSize="14dp"
-        app:layout_constraintEnd_toEndOf="@+id/longUrlET"
-        app:layout_constraintStart_toStartOf="@+id/longUrlET"
-        app:layout_constraintTop_toBottomOf="@+id/longUrlET" />
-
-    <ProgressBar
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_marginVertical="@dimen/half_margin"
+        app:layout_constraintEnd_toEndOf="@+id/longUrlET"
+        app:layout_constraintStart_toStartOf="@+id/longUrlET"
+        app:layout_constraintTop_toBottomOf="@+id/longUrlET">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/generateBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:alpha="0.5"
+            android:enabled="false"
+            android:text="@string/generate_link"
+            android:textColor="@color/gray_white"
+            android:textSize="12sp"
+            app:iconGravity="textEnd"
+            app:iconSize="14dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pasteBtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="@dimen/half_margin"
+            android:text="@string/paste"
+            android:textColor="@color/gray_white"
+            android:textSize="12sp"
+            app:iconGravity="textEnd"
+            app:iconSize="14dp" />
+
+    </LinearLayout>
+
+    <ProgressBar
         android:id="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/generateBtn" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/longUrlET"
+        app:layout_constraintEnd_toEndOf="@+id/longUrlET"
+        app:layout_constraintTop_toTopOf="@+id/longUrlET"
+        tools:visibility="visible" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

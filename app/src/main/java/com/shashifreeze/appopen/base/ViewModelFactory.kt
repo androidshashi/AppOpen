@@ -8,6 +8,8 @@ import com.shashifreeze.appopen.view.ui.home.HomeRepository
 import com.shashifreeze.appopen.view.ui.home.HomeViewModel
 import com.shashifreeze.appopen.view.ui.main.MainRepository
 import com.shashifreeze.appopen.view.ui.main.MainViewModel
+import com.shashifreeze.appopen.view.ui.search.SearchRepository
+import com.shashifreeze.appopen.view.ui.search.SearchViewModel
 
 /**
  * @author: Shashi
@@ -30,6 +32,10 @@ class ViewModelFactory(private val repo1: BaseRepository, private val repo2: Bas
 
             modelClass.isAssignableFrom(HistoryViewModel::class.java) -> {
                 HistoryViewModel(repo1 as HistoryRepository) as T
+            }
+
+            modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
+                SearchViewModel(repo1 as SearchRepository) as T
             }
 
             else -> throw IllegalArgumentException("View model not found")

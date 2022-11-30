@@ -18,8 +18,9 @@
         android:label="@string/history" />
 
     <fragment
-        android:id="@+id/nav_fragment_settings"
-        android:name="com.shashifreeze.appopen.view.ui.home.HomeFragment"
-        android:label="@string/action_settings" />
+        android:id="@+id/nav_fragment_search"
+        tools:layout="@layout/fragment_search"
+        android:name="com.shashifreeze.appopen.view.ui.search.SearchFragment"
+        android:label="@string/search" />
 
 </navigation>
