@@ -1,8 +1,10 @@
 package com.shashifreeze.appopen.network.response
 
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class UrlData(
     @SerializedName("errorMessage")
     val errorMessage: String?,

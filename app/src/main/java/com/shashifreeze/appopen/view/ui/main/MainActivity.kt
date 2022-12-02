@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         connectionLiveData = ConnectionLiveData(this)
 
         //getAppData
-        viewModel.getAppData(applicationContext.packageName)
+        viewModel.getAppData(packageName)
 
         listeners()
 
@@ -250,7 +250,6 @@ class MainActivity : AppCompatActivity() {
                 else ->{
                     navController.navigate(dest.itemId)
                 }
-
             }
             //close drawer
             binding.drawerLayout.closeDrawers()
@@ -283,6 +282,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)

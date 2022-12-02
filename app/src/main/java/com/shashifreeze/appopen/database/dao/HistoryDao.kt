@@ -1,5 +1,6 @@
 package com.shashifreeze.appopen.database.dao
 
+import androidx.annotation.Keep
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.shashifreeze.appopen.database.entity.HistoryData
@@ -9,7 +10,6 @@ import com.shashifreeze.appopen.database.entity.HistoryData
  *@date = 23/07/21
  *@description = This class handles all the queries of room database
  */
-
 @Dao
 interface HistoryDao {
 
