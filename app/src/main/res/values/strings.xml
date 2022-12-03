@@ -40,7 +40,7 @@
     <string name="your_name">Your Name</string>
     <string name="message">Message</string>
     <string name="send_message">Send Message</string>
-    <string name="contact_us">Contact Us</string>
+    <string name="contact_us">Contact us | send feedback</string>
     <string name="we_will_reply_to_your_message_within_8_working_hours_so_have_patience_thanks_for_using_our_app">We will reply to your message within 8 working hours. So have patience. Thanks for using our app.</string>
     <string name="contact_email">skprogrammingdesire@gmail.com</string>
     <string name="launch_appopen_me">Launch Appopen.me</string>
@@ -49,5 +49,10 @@
     <string name="get_short_link_info">Get short link info</string>
     <string name="not_a_valid_url">Not a valid appopen.me URL</string>
     <string name="link_info">Link Info</string>
+    <string name="later">Later</string>
+    <string name="rate">Rate Now</string>
+    <string name="would_you_mind_rating_us">Would you mind rating us?</string>
+    <string name="enjoying_the_app">Enjoying the app?</string>
+    <string name="submit">submit</string>
 
 </resources>

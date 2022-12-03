@@ -1,13 +1,15 @@
 package com.shashifreeze.appopen.apputils.extensions
 
-import android.content.ActivityNotFoundException
-import android.content.ComponentName
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
-import android.provider.Settings
-import android.text.TextUtils
+import android.view.ViewGroup
+import android.view.Window
+import android.widget.RatingBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
@@ -15,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.material.button.MaterialButton
 import com.shashifreeze.appopen.BuildConfig
 import com.shashifreeze.appopen.R
 import java.io.File
@@ -28,7 +31,6 @@ import java.util.*
  *@date = 25/07/21
  *@description = This File contains Context extension functions
  */
-
 
 
 /**
@@ -97,26 +99,6 @@ fun Context.adInfoDialog(
 
 fun Context.showToast(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-}
-
-fun Context.notificationPermissionEnabled(): Boolean {
-    val pkgName = packageName
-    val flat = Settings.Secure.getString(
-        contentResolver,
-        "enabled_notification_listeners"
-    )
-    if (!TextUtils.isEmpty(flat)) {
-        val names = flat.split(":").toTypedArray()
-        for (name in names) {
-            val cn = ComponentName.unflattenFromString(name)
-            if (cn != null) {
-                if (TextUtils.equals(pkgName, cn.packageName)) {
-                    return true
-                }
-            }
-        }
-    }
-    return false
 }
 
 fun Context.getCurrentTime(format: String = "dd.MM.yyyy. HH:mm a"): String {
@@ -308,6 +290,45 @@ fun Context.openCustomChromeTab(url:String)
         // redirecting our user to users device default browser.
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
+}
+
+fun Context.showRatingDialog(rateBtnCallback:()->Unit, exitCallback:()->Unit, ratingBarCallback:()->Unit ): Dialog
+{
+    val dialog = Dialog(this)
+    dialog.window?.apply {
+        setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        requestFeature(Window.FEATURE_NO_TITLE)
+        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+    dialog.apply {
+        setContentView(R.layout.rating_dialog_layout)
+        setCancelable(false)
+        setCanceledOnTouchOutside(false)
+    }
+    //set the custom dialog components - title, ProgressBar and button
+    val rateBtn =  dialog.findViewById<MaterialButton>(R.id.rateBtn).apply {
+        setOnClickListener {
+            rateBtnCallback.invoke()
+        }
+
+        enable(false)
+    }
+
+    dialog.findViewById<MaterialButton>(R.id.laterBtn).setOnClickListener {
+        exitCallback.invoke()
+    }
+
+    dialog.findViewById<RatingBar>(R.id.ratingBar).setOnRatingBarChangeListener { ratingBar, fl, b ->
+        rateBtn.enable(ratingBar.rating>=0.5)
+        if (ratingBar.rating>=4)
+        {
+            ratingBarCallback.invoke()
+        }
+    }
+
+    dialog.show()
+    return dialog
 }
 
 

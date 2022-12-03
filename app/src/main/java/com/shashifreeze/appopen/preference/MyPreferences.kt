@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.shashifreeze.appopen.apputils.Constants.PREFERENCE_NAME
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import okhttp3.internal.cache2.Relay.Companion.edit
 import javax.inject.Singleton
 
 
@@ -28,7 +29,7 @@ object MyPreferences {
     private val KEY_AD_SEEN_ON= stringPreferencesKey("KEY_AD_SEEN_ON")
     private val KEY_AD_INFO= booleanPreferencesKey("KEY_AD_INFO")
     private val KEY_DS= stringPreferencesKey("KEY_DS")
-
+    private val KEY_HAS_RATED= booleanPreferencesKey("KEY_HAS_RATED")
 
     /**set whether user has accepted the condition or not*/
     suspend fun setTNCAccepted(context: Context, accepted: Boolean) {
@@ -78,6 +79,22 @@ object MyPreferences {
      */
     fun getAdInfoAlert(context: Context):Flow<Boolean?> = context.appDataStore.data.map {
         if (it[KEY_AD_INFO] != null) it[KEY_AD_INFO]!! else null
+    }
+
+
+
+    /**set whether user has accepted the condition or not*/
+    suspend fun setRated(context: Context, accepted: Boolean) {
+        context.appDataStore.apply {
+            edit { it[KEY_HAS_RATED] = accepted }
+        }
+    }
+
+    /**
+     * Get whether user has accepted TNC or not
+     */
+    fun hasRated(context: Context):Flow<Boolean> = context.appDataStore.data.map {
+        if (it[KEY_HAS_RATED] != null) it[KEY_HAS_RATED]!! else false
     }
 
 }

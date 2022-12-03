@@ -1,10 +1,13 @@
 package com.shashifreeze.appopen.view.ui.home
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.webkit.URLUtil
 import android.widget.EditText
@@ -24,15 +27,17 @@ import com.shashifreeze.appopen.apputils.Network
 import com.shashifreeze.appopen.apputils.TextChangeWatcher
 import com.shashifreeze.appopen.apputils.extensions.*
 import com.shashifreeze.appopen.apputils.getInterstitialAdUnitID
-import com.shashifreeze.appopen.databinding.FragmentHomeBinding
 import com.shashifreeze.appopen.network.NetworkResource
 import com.shashifreeze.appopen.network.response.UrlResponse
 import com.shashifreeze.appopen.preference.MyPreferences
 import com.shashifreeze.appopen.view.ui.history.HistoryViewModel
 import com.shashifreeze.appopen.apputils.extensions.copyToClipboard
+import com.shashifreeze.appopen.databinding.FragmentHomeBinding
+import com.shashifreeze.appopen.view.ui.contact.ContactActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
 /**
@@ -50,6 +55,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel by viewModels<HomeViewModel>()
     private var solveCaptchaDialog: Dialog? = null
     private val historyViewModel by viewModels<HistoryViewModel>()
+    private var ratingDialog: Dialog? = null
 
     companion object {
         const val TAG = "ResearchFragment"
@@ -112,10 +118,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             })
     }
 
-    private fun solveCaptchaDialog(longUrl:String) {
+    private fun solveCaptchaDialog(longUrl: String) {
         solveCaptchaDialog = Dialog(requireContext())
         solveCaptchaDialog?.let { dialog ->
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.window?.apply {
+                setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                requestFeature(Window.FEATURE_NO_TITLE)
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
             dialog.setCancelable(false)
             dialog.setContentView(R.layout.solve_captcha_dialog)
             val tv1 = dialog.findViewById(R.id.input1ET) as TextView
@@ -146,12 +156,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     }
 
-    private fun urlCreatedDialog(shortUrl:String) {
+    private fun urlCreatedDialog(shortUrl: String) {
 
         val dialog = Dialog(requireContext())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            requestFeature(Window.FEATURE_NO_TITLE)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.url_created_dialog)
+
         val tv1 = dialog.findViewById(R.id.shortUrlTV) as TextView
         tv1.text = shortUrl
         val closeIV = dialog.findViewById(R.id.closeIV) as ImageView
@@ -163,7 +178,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         shareBtn.setOnClickListener {
             requireContext().shareText(shortUrl)
         }
-        closeIV.setOnClickListener { dialog.dismiss() }
+        closeIV.setOnClickListener {
+            dialog.dismiss()
+            ratingDialog()
+        }
         dialog.show()
     }
 
@@ -187,28 +205,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun observe() {
         viewModel.createShortLinkLiveData.observe(viewLifecycleOwner) {
-            if (it is NetworkResource.Loading)
-            {
+            if (it is NetworkResource.Loading) {
                 //close captcha dialog
                 solveCaptchaDialog?.dismiss()
                 binding.progressBar.visible(true)
-            }else{
+            } else {
                 binding.progressBar.visible(false)
             }
 
             if (it is NetworkResource.Success<*>) {
                 //@todo handle response
                 val urlData = (it.value as UrlResponse).urlData
-                if (urlData.errorMessage!=null)
-                {
+                if (urlData.errorMessage != null) {
                     requireContext().showInfoDialog(title = "Error", urlData.errorMessage)
-                }else{
+                } else {
                     val shortLink = "https://appopen.me/${urlData.type}/${urlData.shortCode}"
                     //show short link dialog
                     urlCreatedDialog(shortLink)
                     //Add url to local history
                     lifecycleScope.launch {
-                        historyViewModel.saveHistory(longUrl = binding.longUrlET.text.toString(), shortUrl = shortLink)
+                        historyViewModel.saveHistory(
+                            longUrl = binding.longUrlET.text.toString(),
+                            shortUrl = shortLink
+                        )
                     }
                 }
 
@@ -216,6 +235,36 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 Log.d(TAG, "${it.isNetworkError}, ${it.errorBody}, ${it.message}")
                 requireContext().showInfoDialog(title = "Error", "Something went wrong!")
             }
+        }
+    }
+
+    private fun ratingDialog() {
+        var alreadyRated = false
+        runBlocking {
+            alreadyRated = MyPreferences.hasRated(requireContext()).first()
+        }
+
+        if (!alreadyRated) {
+            ratingDialog = requireContext().showRatingDialog(rateBtnCallback = {
+                runBlocking {
+                    MyPreferences.setRated(requireContext(), true)
+                }
+                ratingDialog?.dismiss()
+                requireActivity().startNewActivity(ContactActivity::class.java)
+
+            },
+                exitCallback = {
+                    ratingDialog?.dismiss()
+                },
+                ratingBarCallback = {
+                    runBlocking {
+                        MyPreferences.setRated(requireContext(), true)
+                    }
+                    //close dialog
+                    ratingDialog?.dismiss()
+                    //Open play store
+                    requireContext().openAppOnPlayStore()
+                })
         }
     }
 
